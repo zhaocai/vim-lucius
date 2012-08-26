@@ -93,7 +93,7 @@
 
 
 " ============================================================================
-" Options:
+" Options:                                                                [[[1
 " ============================================================================
 
 hi clear
@@ -136,7 +136,7 @@ endif
 
 
 " ============================================================================
-" Color Map:
+" Color Map:                                                              [[[1
 " ============================================================================
 
 let s:color_map = {
@@ -205,7 +205,7 @@ let s:color_map = {
 
 
 " ============================================================================
-" Functions:
+" Functions:                                                              [[[1
 " ============================================================================
 
 function! s:AddCterm(name)
@@ -228,7 +228,7 @@ endfunction
 
 
 " ============================================================================
-" Text Groups:
+" Text Groups:                                                            [[[1
 " ============================================================================
 
 let s:normal_items = [
@@ -241,7 +241,7 @@ let s:normal_items = [
             \ "PmenuThumb", "PreProc", "Question", "Search", "SignColumn",
             \ "Special", "SpecialKey", "Statement", "StatusLineNC", "TabLine",
             \ "TabLineFill", "Todo", "Type", "VertSplit", "Visual",
-            \ "WarningMsg", "WildMenu",
+            \ "WarningMsg", "WildMenu", 'Ignore',
             \ ]
 
 let s:bold_items = [
@@ -257,15 +257,21 @@ let s:undercurl_items = [
             \ "SpellBad", "SpellCap", "SpellLocal", "SpellRare"
             \ ]
 
+let s:reverse_items = [
+            \ "Reverse",
+            \ ]
+
 " Clear default settings
-for s:item in s:normal_items + s:bold_items + s:underline_items + s:undercurl_items
+for s:item in s:normal_items + s:bold_items
+            \ + s:underline_items + s:undercurl_items
+            \ + s:reverse_items
     exec "hi " . s:item . " guifg=NONE guibg=NONE gui=none"
                 \ . " ctermfg=NONE ctermbg=NONE cterm=none term=none"
 endfor
 
 
 " ============================================================================
-" Color Definitions:
+" Color Definitions:                                                      [[[1
 " ============================================================================
 
 " ----------------------------------------------------------------------------
@@ -298,14 +304,18 @@ endif
 if s:style == "light"
     if s:contrast_bg == "high"
         hi Normal                       guibg=#ffffff
+        hi Ignore                       guifg=#ffffaf
     else
         hi Normal                       guibg=#eeeeee
+        hi Ignore                       guifg=#dadada
     endif
 else
     if s:contrast_bg == "high"
         hi Normal                       guibg=#121212
+        hi Ignore                       guifg=#262626
     else
         hi Normal                       guibg=#303030
+        hi Ignore                       guifg=#444444
     endif
 endif
 
@@ -631,12 +641,11 @@ endif
 " Miscellaneous:
 " ----------------------------------------------------------------------------
 
-hi Ignore       guifg=bg
 hi Underlined   guifg=fg
 
 
 " ============================================================================
-" Text Emphasis:
+" Text Emphasis:                                                          [[[1
 " ============================================================================
 
 for s:item in s:normal_items
@@ -658,18 +667,22 @@ if s:use_underline == 1
     endfor
 endif
 
+for s:item in s:reverse_items
+    exec "hi " . s:item . " gui=reverse cterm=reverse term=none"
+endfor
+
 for s:item in s:undercurl_items
     exec "hi " . s:item . " gui=undercurl term=none"
 endfor
 
 
 " ============================================================================
-" Cterm Colors:
+" Cterm Colors:                                                           [[[1
 " ============================================================================
 
 call s:AddCterm("Normal")
 
-for s:item in s:normal_items + s:bold_items + s:underline_items
+for s:item in s:normal_items + s:bold_items + s:underline_items + s:reverse_items
     call s:AddCterm(s:item)
 endfor
 
@@ -679,7 +692,7 @@ endfor
 
 
 " ============================================================================
-" Alternative Bold Definitions:
+" Alternative Bold Definitions:                                           [[[1
 " ============================================================================
 
 let s:alternative_bold_items = ["Identifier", "PreProc", "Statement",
@@ -696,7 +709,7 @@ endfor
 
 
 " ============================================================================
-" Plugin Specific Colors:
+" Plugin Specific Colors:                                                 [[[1
 " ============================================================================
 
 " Tagbar:
@@ -714,7 +727,7 @@ hi link VimwikiHeader6 BType
 
 
 " ============================================================================
-" Preset Commands:
+" Preset Commands:                                                        [[[1
 " ============================================================================
 
 function! SetLucius(style, contrast, contrast_bg)
@@ -751,5 +764,10 @@ command! LuciusBlackLowContrast call SetLucius("dark", "low", "high")
 command! LuciusBlackHighContrast call SetLucius("dark", "high", "high")
             \ | colorscheme lucius
 
-" vim: tw=78
+
+
+" ============================================================================
+" Modeline:                                                               [[[1
+" ============================================================================
+" vim: set ft=vim ts=8 sw=4 tw=78 fmr=[[[,]]] fdm=marker fdl=1 :
 
